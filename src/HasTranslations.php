@@ -28,7 +28,7 @@ trait HasTranslations
      *
      * @return mixed
      */
-    public function translate(string $key, string $locale = '')
+    public function translate($key, $locale = '')
     {
         return $this->getTranslation($key, $locale);
     }
@@ -39,13 +39,13 @@ trait HasTranslations
      *
      * @return mixed
      */
-    public function getTranslation(string $key, string $locale)
+    public function getTranslation($key, $locale)
     {
         $locale = $this->normalizeLocale($key, $locale);
 
         $translations = $this->getTranslations($key);
 
-        $translation = $translations[$locale] ?? '';
+        $translation = $translations[$locale] ?: '';
 
         if ($this->hasGetMutator($key)) {
             return $this->mutateAttribute($key, $translation);
@@ -54,11 +54,11 @@ trait HasTranslations
         return $translation;
     }
 
-    public function getTranslations($key) : array
+    public function getTranslations($key)
     {
         $this->guardAgainstUntranslatableAttribute($key);
 
-        return json_decode($this->getAttributes()[$key] ?? '' ?: '{}', true);
+        return json_decode($this->getAttributes()[$key] ?: '' ?: '{}', true);
     }
 
     /**
@@ -68,13 +68,13 @@ trait HasTranslations
      *
      * @return $this
      */
-    public function setTranslation(string $key, string $locale, $value)
+    public function setTranslation($key, $locale, $value)
     {
         $this->guardAgainstUntranslatableAttribute($key);
 
         $translations = $this->getTranslations($key);
 
-        $oldValue = $translations[$locale] ?? '';
+        $oldValue = $translations[$locale] ?: '';
 
         if ($this->hasSetMutator($key)) {
             $method = 'set'.Str::studly($key).'Attribute';
@@ -96,7 +96,7 @@ trait HasTranslations
      *
      * @return $this
      */
-    public function setTranslations(string $key, array $translations)
+    public function setTranslations($key, array $translations)
     {
         $this->guardAgainstUntranslatableAttribute($key);
 
@@ -124,12 +124,12 @@ trait HasTranslations
         return $this;
     }
 
-    public function getTranslatedLocales(string $key) : array
+    public function getTranslatedLocales($key)
     {
         return array_keys($this->getTranslations($key));
     }
 
-    protected function isTranslatableAttribute(string $key) : bool
+    protected function isTranslatableAttribute(string $key)
     {
         return in_array($key, $this->getTranslatableAttributes());
     }
@@ -141,7 +141,7 @@ trait HasTranslations
         }
     }
 
-    protected function normalizeLocale(string $key, string $locale) : string
+    protected function normalizeLocale(string $key, string $locale)
     {
         if (in_array($locale, $this->getTranslatedLocales($key))) {
             return $locale;
@@ -154,14 +154,14 @@ trait HasTranslations
         return $locale;
     }
 
-    public function getTranslatableAttributes() : array
+    public function getTranslatableAttributes()
     {
         return is_array($this->translatable)
             ? $this->translatable
             : [];
     }
 
-    public function getCasts() : array
+    public function getCasts()
     {
         return array_merge(
             parent::getCasts(),
