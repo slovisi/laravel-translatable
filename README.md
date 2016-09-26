@@ -1,11 +1,6 @@
 # A trait to make Eloquent models translatable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-translatable.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-translatable)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/spatie/laravel-translatable/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-translatable)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/c4778005-2b5f-4cd7-b4b2-9b12d326dded.svg?style=flat-square)](https://insight.sensiolabs.com/projects/c4778005-2b5f-4cd7-b4b2-9b12d326dded)
-[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-translatable.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-translatable)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-translatable.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-translatable)
+This package is a Fork of spatie/laravel-translatable. I needed to be able to use it with PHP5.6.
 
 This package contains a trait to make Eloquent models translatable. Translations are stored as json. There is no extra table needed to hold them.
 
@@ -17,7 +12,7 @@ $newsItem
    ->setTranslation('name', 'en', 'Name in English');
    ->setTranslation('name', 'nl', 'Naam in het Nederlands');
    ->save();
-   
+
 $newsItem->name; // Returns 'Name in English' given that the current app locale is 'en'
 $newsItem->getTranslation('name', 'nl'); // returns 'Naam in het Nederlands'
 
@@ -28,11 +23,30 @@ $newsItem->name; // Returns 'Naam in het Nederlands'
 
 ## Installation
 
-You can install the package via composer:
+You can install the package :
+
+In composer.json add before require :
+
+``` json
+"repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/slovisi/laravel-translatable"
+        }
+],
+```
+
+Modify also your minimum-stability setting in composer.json,
+see [for more details](https://getcomposer.org/doc/04-schema.md#minimum-stability).
+
+
+ then in the console:
 
 ``` bash
-composer require spatie/laravel-translatable
+composer update
 ```
+
+The rest should be nearly identical to Spatie/laravel-translatable original package.
 
 Next up, the service provider must be registered:
 
@@ -75,7 +89,7 @@ use Spatie\Translatable\HasTranslations;
 class NewsItem extends Model
 {
     use HasTranslations;
-    
+
     public $translatable = ['name'];
 }
 ```
@@ -179,6 +193,12 @@ In laravel 5.2.23 and above you can use the fluent syntax:
 
 ```php
 NewsItem::where('name->en', 'Name in English')->get();
+```
+
+With MySQL < 5.7 you can do this this way (this is less sexy, well this is even a really crapy way in fact but it works) :
+
+```php
+NewsItem::where('name','like', '%"en":"Name in English"%')->get();
 ```
 
 ## Changelog
