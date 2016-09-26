@@ -96,7 +96,7 @@ trait HasTranslations
      *
      * @return $this
      */
-    public function setTranslations($key, array $translations)
+    public function setTranslations($key, $translations)
     {
         $this->guardAgainstUntranslatableAttribute($key);
 
@@ -113,7 +113,7 @@ trait HasTranslations
      *
      * @return $this
      */
-    public function forgetTranslation(string $key, string $locale)
+    public function forgetTranslation($key, $locale)
     {
         $translations = $this->getTranslations($key);
 
@@ -129,19 +129,19 @@ trait HasTranslations
         return array_keys($this->getTranslations($key));
     }
 
-    protected function isTranslatableAttribute(string $key)
+    protected function isTranslatableAttribute($key)
     {
         return in_array($key, $this->getTranslatableAttributes());
     }
 
-    protected function guardAgainstUntranslatableAttribute(string $key)
+    protected function guardAgainstUntranslatableAttribute($key)
     {
         if (!$this->isTranslatableAttribute($key)) {
             throw AttributeIsNotTranslatable::make($key, $this);
         }
     }
 
-    protected function normalizeLocale(string $key, string $locale)
+    protected function normalizeLocale($key, $locale)
     {
         if (in_array($locale, $this->getTranslatedLocales($key))) {
             return $locale;
